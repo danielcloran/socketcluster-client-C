@@ -262,7 +262,8 @@ static int ws_service_callback(
 
     switch (reason) {
 
-        case LWS_CALLBACK_CLIENT_ESTABLISHED:{
+        case LWS_CALLBACK_CLIENT_ESTABLISHED: {
+
             // printf(KYEL"[Main Service] Connect with server success.\n"RESET);
             json_object * jobj = json_object_new_object();
             json_object *event = json_object_new_string("#handshake");
@@ -309,17 +310,36 @@ static int ws_service_callback(
             break;
 
         case LWS_CALLBACK_CLIENT_RECEIVE:{
-            if (strcmp((char *)in,"#1")==0){
-                websocket_write_back(wsi, (char *) "#2", -1);
+            // printf("in: %s\n", (char *)in);
+            if (strcmp((char *)in,"")==0){
+                websocket_write_back(wsi, (char *) "", -1);
             }else{
                 // printf(KCYN_L"[Main Service] Client recvived:%s\n"RESET, (char *)in);
                 // printf("UNDER MESSAGE GOT CALLED");
                 char * channel;
                 json_object * data;
                 bool isAuthenticated;
+
                 struct recv_message * _recv=get_message_object();
+
                 json_object * jobj = json_tokener_parse((char *)in);
+
+                if (json_object_get_type(jobj) != json_type_object) {
+                    std::cout<<"NOT JSON OBJ"<<std::endl;
+                    break;
+                }
+                //This line is causing SEG FAULT
+                // std::cout<<"PRE Seg"<<std::endl;
+                // std::cout<<_recv->cid<<std::endl;
+
+                // std::cout<<(char *)in<<std::endl;
+                // std::cout<<json_tokener_parse((char *)in)<<std::endl;
+                // std::cout<<jobj<<std::endl;
+                // std::cout<<"Mid Seg"<<std::endl;
+
                 json_parse(jobj,_recv);
+                // std::cout<<"POST Seg"<<std::endl;
+
                 enum parseresult result=parse(_recv);
                 if (json_object_get_type(_recv->data)==json_type_object){
                     json_object_object_foreach(_recv->data, key, val) {
@@ -372,7 +392,10 @@ static int ws_service_callback(
                         break;
                     }
 
+
+
                 }
+
                 // if (_recv->rid!=-1)
                 // printf("rid is %d",_recv->rid);
                 // if (_recv->cid!=-1)
