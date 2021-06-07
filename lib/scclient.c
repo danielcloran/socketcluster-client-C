@@ -68,10 +68,6 @@ int use_ssl = 0;
 
 
 
-static void INT_HANDLER(int signo) {
-    destroy_flag = 1;
-}
-
 //register the signal SIGINT handler
 static struct recv_message * get_message_object(){
     struct recv_message *recv=(struct recv_message *)malloc(sizeof(struct recv_message));
@@ -766,11 +762,6 @@ void socket_connect()
 {
     context = NULL;
     wsi = NULL;
-
-    act.sa_handler = INT_HANDLER;
-    act.sa_flags = 0;
-    sigemptyset(&act.sa_mask);
-    sigaction( SIGINT, &act, 0);
 
     memset(&info, 0, sizeof info);
 
