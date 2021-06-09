@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <signal.h>
 #include <pthread.h>
-#include <json-c/json.h>
+#include <json/json.h>
 #include <libwebsockets.h>
 #include "hashmap_string.c"
 #include "hashmap.c"
@@ -61,14 +61,11 @@ struct lws *wsi;
 struct lws_client_connect_info i;
 struct lws_protocols protocol;
 struct sigaction act;
+
 int ietf_version = -1;
 
 int use_ssl = 0;
 
-
-
-
-//register the signal SIGINT handler
 static struct recv_message * get_message_object(){
     struct recv_message *recv=(struct recv_message *)malloc(sizeof(struct recv_message));
     recv->rid=-1;
@@ -321,7 +318,7 @@ static int ws_service_callback(
                 json_object * jobj = json_tokener_parse((char *)in);
 
                 if (json_object_get_type(jobj) != json_type_object) {
-                    std::cout<<"NOT JSON OBJ"<<std::endl;
+                    //std::cout<<"NOT JSON OBJ"<<std::endl;
                     break;
                 }
                 //This line is causing SEG FAULT
@@ -774,7 +771,7 @@ void socket_connect()
     info.extensions=NULL;
     info.gid = -1;
     info.uid = -1;
-    info.options = 0;
+    info.options = LWS_SERVER_OPTION_DO_SSL_GLOBAL_INIT;
 
     protocol.name  = "websocket";
     protocol.callback = &ws_service_callback;
