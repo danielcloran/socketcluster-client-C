@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <signal.h>
 #include <pthread.h>
-#include <json-c/json.h>
+#include <json/json.h>
 #include <libwebsockets.h>
 #include "hashmap_string.c"
 #include "hashmap.c"
@@ -94,7 +94,7 @@ struct socket
     char * path;
     char *proxy_address;
     int proxy_port;
-    void (* connect)();
+    int (* connect)();
     void (* disconnect)();
 
 
@@ -755,7 +755,7 @@ void socket_disconnect(){
      free(s);
 }
 
-void socket_connect()
+int socket_connect()
 {
     context = NULL;
     wsi = NULL;
@@ -801,7 +801,7 @@ void socket_connect()
 
     if (context == NULL) {
         printf(KRED "[Main] context is NULL.\n" RESET);
-        return;
+        return 0;
     }
 
 
@@ -812,7 +812,7 @@ void socket_connect()
 
     if (wsi == NULL) {
         printf(KRED "[Main] wsi create error.\n" RESET);
-        return;
+        return 0;
     }
 
     printf(KGRN "[Main] wsi create success.\n" RESET);
@@ -832,7 +832,7 @@ void socket_connect()
 
     lws_context_destroy(context);
 
-    return;
+    return 0;
 }
 
 

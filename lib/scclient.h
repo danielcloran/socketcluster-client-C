@@ -12,7 +12,7 @@ enum parseresult {
 	ACKRECEIVE
 };
 
-void socket_connect();
+int socket_connect();
 void socket_disconnect();
 void _emit_int(char * event,int data);
 void _emit_string(char * event,char * data);
