@@ -47,9 +47,7 @@ static void INT_HANDLER(int signo) {
     destroy_flag = 1;
 }
 
-struct sigaction act;
-    act.sa_handler = INT_HANDLER;
-    act.sa_flags = 0;
+
 
 //Setting flags
 static int destroy_flag = 0;
@@ -66,7 +64,10 @@ struct lws_context_creation_info info;
 struct lws *wsi;
 struct lws_client_connect_info i;
 struct lws_protocols protocol;
+
 struct sigaction act;
+act.sa_handler = INT_HANDLER;
+act.sa_flags = 0;
 
 int ietf_version = -1;
 
