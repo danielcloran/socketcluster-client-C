@@ -840,6 +840,7 @@ int socket_connect()
     }
 
     lws_context_destroy(context);
+    destroy_flag = 0;       // new ws not destroyed
 
 
     return 0;
