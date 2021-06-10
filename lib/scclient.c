@@ -45,8 +45,6 @@ static const struct lws_extension exts[] = {
 
 
 
-
-
 //Setting flags
 static int destroy_flag = 0;
 static int connection_flag = 0;
@@ -62,10 +60,7 @@ struct lws_context_creation_info info;
 struct lws *wsi;
 struct lws_client_connect_info i;
 struct lws_protocols protocol;
-
-static void INT_HANDLER(int signo) {
-    destroy_flag = 1;
-}
+struct sigaction act;
 
 int ietf_version = -1;
 
@@ -762,10 +757,6 @@ void socket_disconnect(){
 
 int socket_connect()
 {
-    struct sigaction act;
-    act.sa_handler = INT_HANDLER;
-    act.sa_flags = 0;
-
     context = NULL;
     wsi = NULL;
 
@@ -840,8 +831,6 @@ int socket_connect()
     }
 
     lws_context_destroy(context);
-    destroy_flag = 0;       // new ws not destroyed
-
 
     return 0;
 }
