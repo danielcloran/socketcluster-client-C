@@ -43,7 +43,13 @@ static const struct lws_extension exts[] = {
     { NULL, NULL, NULL /* terminator */ }
 };
 
+static void INT_HANDLER(int signo) {
+    destroy_flag = 1;
+}
 
+struct sigaction act;
+    act.sa_handler = INT_HANDLER;
+    act.sa_flags = 0;
 
 //Setting flags
 static int destroy_flag = 0;
@@ -757,6 +763,10 @@ void socket_disconnect(){
 
 int socket_connect()
 {
+    struct sigaction act;
+    act.sa_handler = INT_HANDLER;
+    act.sa_flags = 0;
+
     context = NULL;
     wsi = NULL;
 
@@ -831,6 +841,7 @@ int socket_connect()
     }
 
     lws_context_destroy(context);
+
 
     return 0;
 }
