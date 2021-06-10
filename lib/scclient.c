@@ -43,9 +43,7 @@ static const struct lws_extension exts[] = {
     { NULL, NULL, NULL /* terminator */ }
 };
 
-static void INT_HANDLER(int signo) {
-    destroy_flag = 1;
-}
+
 
 
 
@@ -65,9 +63,9 @@ struct lws *wsi;
 struct lws_client_connect_info i;
 struct lws_protocols protocol;
 
-struct sigaction act;
-act.sa_handler = INT_HANDLER;
-act.sa_flags = 0;
+static void INT_HANDLER(int signo) {
+    destroy_flag = 1;
+}
 
 int ietf_version = -1;
 
