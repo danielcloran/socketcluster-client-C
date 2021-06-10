@@ -771,7 +771,7 @@ int socket_connect()
     info.extensions=NULL;
     info.gid = -1;
     info.uid = -1;
-    info.options = 0; // LWS_SERVER_OPTION_DO_SSL_GLOBAL_INIT;
+    info.options = LWS_SERVER_OPTION_DO_SSL_GLOBAL_INIT;
 
     protocol.name  = "websocket";
     protocol.callback = &ws_service_callback;
