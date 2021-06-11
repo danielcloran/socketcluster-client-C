@@ -233,7 +233,7 @@ static int websocket_write_back(struct lws *wsi_in, char *str, int str_size_in)
     //* write out*/
     n = lws_write(wsi_in, out + LWS_SEND_BUFFER_PRE_PADDING, len, LWS_WRITE_TEXT);
 
-    // printf(KBLU"[websocket_write_back] %s\n"RESET, str);
+    std::cout(KBLU "[websocket_write_back] %s\n" RESET, str);
     //* free the buffer*/
     free(out);
 
@@ -257,7 +257,7 @@ static int ws_service_callback(
 
         case LWS_CALLBACK_CLIENT_ESTABLISHED: {
 
-            printf(KYEL "[Main Service] Connect with server success.\n" RESET);
+            std::cout(KYEL "[Main Service] Connect with server success.\n" RESET);
             json_object * jobj = json_object_new_object();
             json_object *event = json_object_new_string("#handshake");
             json_object * authobject = json_object_new_object();
@@ -275,7 +275,7 @@ static int ws_service_callback(
             }
 
             char * data = (char *)json_object_to_json_string(jobj);
-            printf ("The json object created: %sn",json_object_to_json_string(jobj));
+            std::cout ("The json object created: %s.\n",json_object_to_json_string(jobj));
             // "{\"event\": \"#handshake\",\"data\": {\"authToken\":null},\"cid\":1}"
             websocket_write_back(wsi, data, -1);
             if (s->connect_callback!=NULL) {
@@ -288,7 +288,7 @@ static int ws_service_callback(
 
         case LWS_CALLBACK_CLIENT_CONNECTION_ERROR:{
             if (s->connect_error_callback!=NULL) s->connect_error_callback(s);
-            printf(KRED "[Main Service] Connect with server error.\n" RESET);
+            std::cout(KRED "[Main Service] Connect with server error.\n" RESET);
             destroy_flag = 1;
             connection_flag = 0;
         }
@@ -296,19 +296,19 @@ static int ws_service_callback(
 
         case LWS_CALLBACK_CLOSED:{
             if (s->disconnect_callback!=NULL) s->disconnect_callback(s);
-            printf(KYEL "[Main Service] LWS_CALLBACK_CLOSED\n" RESET);
+            std::cout(KYEL "[Main Service] LWS_CALLBACK_CLOSED\n" RESET);
             destroy_flag = 1;
             connection_flag = 0;
         }
             break;
 
         case LWS_CALLBACK_CLIENT_RECEIVE:{
-            printf("ping / pong");
+            std::cout("ping / pong \n");
             //printf("in: %s\n", (char *)in);
             if (strcmp((char *)in,"")==0){
                 websocket_write_back(wsi, (char *) "", -1);
             }else{
-                printf(KCYN_L "[Main Service] Client recvived:%s\n" RESET, (char *)in);
+                std::cout(KCYN_L "[Main Service] Client recvived:%s\n" RESET, (char *)in);
                 // printf("UNDER MESSAGE GOT CALLED");
                 char * channel;
                 json_object * data;
@@ -319,20 +319,10 @@ static int ws_service_callback(
                 json_object * jobj = json_tokener_parse((char *)in);
 
                 if (json_object_get_type(jobj) != json_type_object) {
-                    // std::cout<<"NOT JSON OBJ"<<std::endl;
                     break;
                 }
-                //This line is causing SEG FAULT
-                // std::cout<<"PRE Seg"<<std::endl;
-                // std::cout<<_recv->cid<<std::endl;
-
-                // std::cout<<(char *)in<<std::endl;
-                // std::cout<<json_tokener_parse((char *)in)<<std::endl;
-                // std::cout<<jobj<<std::endl;
-                // std::cout<<"Mid Seg"<<std::endl;
 
                 json_parse(jobj,_recv);
-                // std::cout<<"POST Seg"<<std::endl;
 
                 enum parseresult result=parse(_recv);
                 if (json_object_get_type(_recv->data)==json_type_object){
@@ -407,7 +397,7 @@ static int ws_service_callback(
         }
             break;
         case LWS_CALLBACK_CLIENT_WRITEABLE :{
-            printf(KYEL "[Main Service] On writeable is called. send byebye message\n" RESET);
+            std::cout<<(KYEL "[Main Service] On writeable is called. send byebye message\n" RESET);
             websocket_write_back(wsi, (char *)"Byebye! See you later", -1);
             writeable_flag = 1;
         }
@@ -798,10 +788,10 @@ int socket_connect()
     i.ietf_version_or_minus_one = ietf_version;
     i.client_exts = exts;
 
-    printf(KRED "[Main] context created.\n" RESET);
+    std::cout(KRED "[Main] context created.\n" RESET);
 
     if (context == NULL) {
-        printf(KRED "[Main] context is NULL.\n" RESET);
+        std::cout(KRED "[Main] context is NULL.\n" RESET);
         return 0;
     }
 
@@ -812,11 +802,11 @@ int socket_connect()
     wsi=lws_client_connect_via_info(&i);
 
     if (wsi == NULL) {
-        printf(KRED "[Main] wsi create error.\n" RESET);
+        std::cout(KRED "[Main] wsi create error.\n" RESET);
         return 0;
     }
 
-    printf(KGRN "[Main] wsi create success.\n" RESET);
+    std::cout(KGRN "[Main] wsi create success.\n" RESET);
 
     // struct pthread_routine_tool tool;
     // tool.wsi = wsi;
