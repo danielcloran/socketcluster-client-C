@@ -257,7 +257,7 @@ static int ws_service_callback(
 
         case LWS_CALLBACK_CLIENT_ESTABLISHED: {
 
-            // printf(KYEL"[Main Service] Connect with server success.\n"RESET);
+            printf(KYEL"[Main Service] Connect with server success.\n"RESET);
             json_object * jobj = json_object_new_object();
             json_object *event = json_object_new_string("#handshake");
             json_object * authobject = json_object_new_object();
@@ -275,7 +275,7 @@ static int ws_service_callback(
             }
 
             char * data = (char *)json_object_to_json_string(jobj);
-            // printf ("The json object created: %sn",json_object_to_json_string(jobj));
+            printf ("The json object created: %sn",json_object_to_json_string(jobj));
             // "{\"event\": \"#handshake\",\"data\": {\"authToken\":null},\"cid\":1}"
             websocket_write_back(wsi, data, -1);
             if (s->connect_callback!=NULL) {
@@ -288,7 +288,7 @@ static int ws_service_callback(
 
         case LWS_CALLBACK_CLIENT_CONNECTION_ERROR:{
             if (s->connect_error_callback!=NULL) s->connect_error_callback(s);
-            // printf(KRED"[Main Service] Connect with server error.\n"RESET);
+            printf(KRED"[Main Service] Connect with server error.\n"RESET);
             destroy_flag = 1;
             connection_flag = 0;
         }
@@ -296,18 +296,19 @@ static int ws_service_callback(
 
         case LWS_CALLBACK_CLOSED:{
             if (s->disconnect_callback!=NULL) s->disconnect_callback(s);
-            // printf(KYEL"[Main Service] LWS_CALLBACK_CLOSED\n"RESET);
+            printf(KYEL"[Main Service] LWS_CALLBACK_CLOSED\n"RESET);
             destroy_flag = 1;
             connection_flag = 0;
         }
             break;
 
         case LWS_CALLBACK_CLIENT_RECEIVE:{
-            // printf("in: %s\n", (char *)in);
+            printf("ping / pong");
+            //printf("in: %s\n", (char *)in);
             if (strcmp((char *)in,"")==0){
                 websocket_write_back(wsi, (char *) "", -1);
             }else{
-                // printf(KCYN_L"[Main Service] Client recvived:%s\n"RESET, (char *)in);
+                printf(KCYN_L"[Main Service] Client recvived:%s\n"RESET, (char *)in);
                 // printf("UNDER MESSAGE GOT CALLED");
                 char * channel;
                 json_object * data;
@@ -318,7 +319,7 @@ static int ws_service_callback(
                 json_object * jobj = json_tokener_parse((char *)in);
 
                 if (json_object_get_type(jobj) != json_type_object) {
-                    //std::cout<<"NOT JSON OBJ"<<std::endl;
+                    std::cout<<"NOT JSON OBJ"<<std::endl;
                     break;
                 }
                 //This line is causing SEG FAULT
@@ -406,7 +407,7 @@ static int ws_service_callback(
         }
             break;
         case LWS_CALLBACK_CLIENT_WRITEABLE :{
-            // printf(KYEL"[Main Service] On writeable is called. send byebye message\n"RESET);
+            printf(KYEL"[Main Service] On writeable is called. send byebye message\n"RESET);
             websocket_write_back(wsi, (char *)"Byebye! See you later", -1);
             writeable_flag = 1;
         }
