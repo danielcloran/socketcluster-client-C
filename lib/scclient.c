@@ -398,9 +398,9 @@ static int ws_service_callback(
         }
             break;
         case LWS_CALLBACK_CLIENT_WRITEABLE :{
-            std::cout<< KYEL << "[Main Service] On writeable is called. send byebye message" << RESET << std::endl;
-            websocket_write_back(wsi, (char *)"Byebye! See you later", -1);
-            writeable_flag = 1;
+            std::cout<< KYEL << "[Main Service] On writeable is called." << RESET << std::endl;
+            // websocket_write_back(wsi, (char *)"Byebye! See you later", -1);
+            // writeable_flag = 1;
         }
             break;
 
