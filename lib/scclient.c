@@ -234,7 +234,7 @@ static int websocket_write_back(struct lws *wsi_in, char *str, int str_size_in)
     //* write out*/
     n = lws_write(wsi_in, out + LWS_SEND_BUFFER_PRE_PADDING, len, LWS_WRITE_TEXT);
 
-    std::cout(KBLU "[websocket_write_back] %s\n" RESET, str);
+    std::cout << KBLU << "[websocket_write_back]" << str << RESET << std::endl;
     //* free the buffer*/
     free(out);
 
@@ -258,7 +258,7 @@ static int ws_service_callback(
 
         case LWS_CALLBACK_CLIENT_ESTABLISHED: {
 
-            std::cout(KYEL "[Main Service] Connect with server success.\n" RESET);
+            std::cout << (KYEL << "[Main Service] Connect with server success." << RESET << std::endl;
             json_object * jobj = json_object_new_object();
             json_object *event = json_object_new_string("#handshake");
             json_object * authobject = json_object_new_object();
@@ -276,7 +276,7 @@ static int ws_service_callback(
             }
 
             char * data = (char *)json_object_to_json_string(jobj);
-            std::cout ("The json object created: %s.\n",json_object_to_json_string(jobj));
+            std::cout << "The json object created: " << json_object_to_json_string(jobj) << std::endl;
             // "{\"event\": \"#handshake\",\"data\": {\"authToken\":null},\"cid\":1}"
             websocket_write_back(wsi, data, -1);
             if (s->connect_callback!=NULL) {
@@ -289,7 +289,7 @@ static int ws_service_callback(
 
         case LWS_CALLBACK_CLIENT_CONNECTION_ERROR:{
             if (s->connect_error_callback!=NULL) s->connect_error_callback(s);
-            std::cout(KRED "[Main Service] Connect with server error.\n" RESET);
+            std::cout << KRED << "[Main Service] Connect with server error." << RESET << std::endl;
             destroy_flag = 1;
             connection_flag = 0;
         }
@@ -297,19 +297,19 @@ static int ws_service_callback(
 
         case LWS_CALLBACK_CLOSED:{
             if (s->disconnect_callback!=NULL) s->disconnect_callback(s);
-            std::cout(KYEL "[Main Service] LWS_CALLBACK_CLOSED\n" RESET);
+            std::cout << KYEL << "[Main Service] LWS_CALLBACK_CLOSED" << RESET << std::endl;
             destroy_flag = 1;
             connection_flag = 0;
         }
             break;
 
         case LWS_CALLBACK_CLIENT_RECEIVE:{
-            std::cout("ping / pong \n");
+            std::cout << "ping / pong" << std::endl;
             //printf("in: %s\n", (char *)in);
             if (strcmp((char *)in,"")==0){
                 websocket_write_back(wsi, (char *) "", -1);
             }else{
-                std::cout(KCYN_L "[Main Service] Client recvived:%s\n" RESET, (char *)in);
+                std::cout << KCYN_L << "[Main Service] Client received: " << (char *)in << RESET << std::endl;
                 // printf("UNDER MESSAGE GOT CALLED");
                 char * channel;
                 json_object * data;
@@ -398,7 +398,7 @@ static int ws_service_callback(
         }
             break;
         case LWS_CALLBACK_CLIENT_WRITEABLE :{
-            std::cout<<(KYEL "[Main Service] On writeable is called. send byebye message\n" RESET);
+            std::cout<< KYEL << "[Main Service] On writeable is called. send byebye message" << RESET << std::endl;
             websocket_write_back(wsi, (char *)"Byebye! See you later", -1);
             writeable_flag = 1;
         }
@@ -789,10 +789,10 @@ int socket_connect()
     i.ietf_version_or_minus_one = ietf_version;
     i.client_exts = exts;
 
-    std::cout(KRED "[Main] context created.\n" RESET);
+    std::cout << KRED << "[Main] context created." << RESET << std::endl;
 
     if (context == NULL) {
-        std::cout(KRED "[Main] context is NULL.\n" RESET);
+        std::cout << KRED << "[Main] context is NULL." << RESET << std::endl;
         return 0;
     }
 
@@ -803,11 +803,11 @@ int socket_connect()
     wsi=lws_client_connect_via_info(&i);
 
     if (wsi == NULL) {
-        std::cout(KRED "[Main] wsi create error.\n" RESET);
+        std::cout << KRED <<  "[Main] wsi create error." << RESET << std::endl;
         return 0;
     }
 
-    std::cout(KGRN "[Main] wsi create success.\n" RESET);
+    std::cout << KGRN << "[Main] wsi create success." << RESET << std::endl;
 
     // struct pthread_routine_tool tool;
     // tool.wsi = wsi;
