@@ -258,7 +258,7 @@ static int ws_service_callback(
 
         case LWS_CALLBACK_CLIENT_ESTABLISHED: {
 
-            std::cout << (KYEL << "[Main Service] Connect with server success." << RESET << std::endl;
+            std::cout << KYEL << "[Main Service] Connect with server success." << RESET << std::endl;
             json_object * jobj = json_object_new_object();
             json_object *event = json_object_new_string("#handshake");
             json_object * authobject = json_object_new_object();
