@@ -12,6 +12,7 @@
 #include "scclient.h"
 #include "json_parser.c"
 #include "parser.c"
+#include <iostream>
 
 
 #define KGRN "\033[0;32;32m"
