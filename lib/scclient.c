@@ -234,7 +234,7 @@ static int websocket_write_back(struct lws *wsi_in, char *str, int str_size_in)
     //* write out*/
     n = lws_write(wsi_in, out + LWS_SEND_BUFFER_PRE_PADDING, len, LWS_WRITE_TEXT);
 
-    std::cout << KBLU << "[websocket_write_back]" << str << RESET << std::endl;
+    //std::cout << KBLU << "[websocket_write_back]" << str << RESET << std::endl;
     //* free the buffer*/
     free(out);
 
@@ -304,7 +304,6 @@ static int ws_service_callback(
             break;
 
         case LWS_CALLBACK_CLIENT_RECEIVE:{
-            std::cout << "ping / pong" << std::endl;
             //printf("in: %s\n", (char *)in);
             if (strcmp((char *)in,"")==0){
                 websocket_write_back(wsi, (char *) "", -1);
