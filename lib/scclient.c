@@ -319,7 +319,7 @@ static int ws_service_callback(
                 json_object * jobj = json_tokener_parse((char *)in);
 
                 if (json_object_get_type(jobj) != json_type_object) {
-                    std::cout<<"NOT JSON OBJ"<<std::endl;
+                    // std::cout<<"NOT JSON OBJ"<<std::endl;
                     break;
                 }
                 //This line is causing SEG FAULT
