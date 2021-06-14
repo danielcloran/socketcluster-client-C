@@ -307,7 +307,11 @@ static int ws_service_callback(
             //printf("in: %s\n", (char *)in);
             if (strcmp((char *)in,"")==0){
                 websocket_write_back(wsi, (char *) "", -1);
-            }else{
+            }
+            else if (strcmp((char *)in,"#1")==0) {
+                websocket_write_back(wsi, (char *) "#2", -1);
+            }
+            else {
                 // std::cout << KCYN_L << "[Main Service] Client received: " << (char *)in << RESET << std::endl;
                 // printf("UNDER MESSAGE GOT CALLED");
                 char * channel;
