@@ -45,7 +45,6 @@ void _allowselfsigned()
     }
 }
 
-struct socket* s;
 struct socket *init_socket(char *protocol, char *address, int port, char *path, char *proxy_address, int proxy_port)
 {
     s = (struct socket *)malloc(sizeof(struct socket));
@@ -119,6 +118,7 @@ struct pthread_routine_tool
 
 static int websocket_write_back(struct lws *wsi_in, char *str, int str_size_in)
 {
+    scc_log(INFO, "writing back\n");
     if (str == NULL || wsi_in == NULL)
         return -1;
 
