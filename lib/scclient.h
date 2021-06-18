@@ -89,9 +89,8 @@ struct socket
     /* data */
 } *s;
 
-struct socket * init_socket(char *protocol, char *address, int port, char *path, char *proxy_address, int proxy_port);
-void delete_socket(struct socket * s);
-
+struct socket *init_socket(char *protocol, char *address, int port, char *path, char *proxy_address, int proxy_port);
+void delete_socket(struct socket *s);
 
 // callback format used everywhere
 typedef void (*callback)(struct ackdata *, json_object *, json_object *);
@@ -139,13 +138,11 @@ void _on(char *event, void (*f)(char *event, json_object *data));
 void _onack(char *event, void (*f)(struct ackdata *name, json_object *data, void (*f)(struct ackdata *name, json_object *error, json_object *data)));
 void _onpublish(char *event, void (*f)(char *event, json_object *data));
 
-
 void handle_emit(char *event, json_object *object);
 void handle_emit_ack(struct ackdata *ack, json_object *object, void (*f)(struct ackdata *, json_object *error, json_object *data));
 void handle_publish(char *event, json_object *object);
 
 void _Ack(struct ackdata *ack, json_object *error, json_object *data);
-
 
 // LWS Socket Settings
 

@@ -29,26 +29,19 @@ void connect_error(struct socket * s)
 {
     printf("successful connect error");
 }
-void on_auth(struct socket * s,bool isauthenticated)
-{
-    printf("Authentication is %s",isauthenticated ? "true" : "false");
-}
-void on_set_auth_token(struct socket * s,char * token)
-{
-    printf("on token got called");
-}
 
 int main()
 {
+    lws_set_log_level(25, NULL); // &outputLog);
+
     init_socket((char *)"ws",(char *)"localhost",8000,(char *)"/socketcluster/",NULL,-1);
     s->connect_callback=&_connect;
     s->disconnect_callback=&disconnect;
     s->connect_error_callback=&connect_error;
-    s->onauth_callback=&on_auth;
-    s->onauthtoken_callback=&on_set_auth_token;
+    //s->onauth_callback=&on_auth;
+    //s->onauthtoken_callback=&on_set_auth_token;
 
     s->on((char *)"chat",&onchat);
-
     //Setting listener over here
     // s->onack((char *)"chat",&on_chat);
     s->connect();
