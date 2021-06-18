@@ -21,7 +21,6 @@ int destroy_flag = 0;
 int connection_flag = 0;
 int writeable_flag = 0;
 
-
 const int ietf_version = -1;
 int use_ssl = 0;
 
@@ -46,6 +45,7 @@ void _allowselfsigned()
     }
 }
 
+struct socket* s;
 struct socket *init_socket(char *protocol, char *address, int port, char *path, char *proxy_address, int proxy_port)
 {
     s = (struct socket *)malloc(sizeof(struct socket));
@@ -157,13 +157,14 @@ static int ws_service_callback(
     enum lws_callback_reasons reason, void *user,
     void *in, size_t len)
 {
+    printf("reason: %d\n", reason);
+    scc_log(INFO, "[Main Service] Init.\n");
 
     switch (reason)
     {
 
     case LWS_CALLBACK_CLIENT_ESTABLISHED:
     {
-
         scc_log(INFO, "[Main Service] Connect with server success.\n");
         json_object *jobj = json_object_new_object();
         json_object *event = json_object_new_string("#handshake");
@@ -709,13 +710,13 @@ int socket_connect()
     info.port = CONTEXT_PORT_NO_LISTEN;
     info.iface = NULL;
     info.protocols = &protocol;
-    info.http_proxy_address = s->proxy_address;
-    info.http_proxy_port = (unsigned int)s->proxy_port;
+    // info.http_proxy_address = s->proxy_address;
+    // info.http_proxy_port = (unsigned int)s->proxy_port;
     // info.extensions = lws_get_internal_extensions();
     info.extensions = NULL;
     info.gid = -1;
     info.uid = -1;
-    info.options = LWS_SERVER_OPTION_DO_SSL_GLOBAL_INIT;
+    // info.options = 0; // LWS_SERVER_OPTION_DO_SSL_GLOBAL_INIT;
 
     protocol.name = "websocket";
     protocol.callback = &ws_service_callback;
@@ -728,20 +729,17 @@ int socket_connect()
 
     memset(&i, 0, sizeof(i));
 
-    i.port = s->port;
-    i.path = s->path;
-    i.address = s->address;
+    i.port = 8000;
+    i.path = "/socketcluster/";
+    i.address = "localhost";
     i.context = context;
-    i.ssl_connection = use_ssl;
-    i.host = s->address;
-    i.origin = s->address;
+    // i.ssl_connection = use_ssl;
+    i.host = "localhost";
+    i.origin = "localhost";
     i.protocol = "websocket";
-    i.ietf_version_or_minus_one = ietf_version;
-    i.client_exts = exts;
-    printf("%d\n", s->port);
-    printf("%s\n", s->path);
-    printf("%s\n", s->address);
-    printf("%d\n", use_ssl);
+    i.ietf_version_or_minus_one = -1;
+    // i.client_exts = exts;
+
     scc_log(INFO, "[Main] context created.\n");
 
     if (context == NULL)
@@ -754,7 +752,11 @@ int socket_connect()
     // "/socketcluster/", "localhost:8000", NULL,
     // protocol.name, -1);
     scc_log(DEBUG, "[Main] attempting socket connect.\n");
+
     wsi = lws_client_connect_via_info(&i);
+
+    scc_log(DEBUG, "[Main] post socket connect.\n");
+
 
     if (wsi == NULL)
     {
