@@ -60,7 +60,8 @@ int ietf_version = -1;
 int use_ssl = 0;
 
 // register the signal SIGINT handler
-static void INT_HANDLER(int signo) {
+static void INT_HANDLER(int signo)
+{
     destroy_flag = 1;
 }
 
@@ -429,8 +430,8 @@ static int ws_service_callback(
             // if (_recv->error!=NULL)
             // printf("error is %s", _recv->error);
         }
-        if (writeable_flag)
-            destroy_flag = 1;
+        /* if (writeable_flag)
+            destroy_flag = 1; */
     }
     break;
     case LWS_CALLBACK_CLIENT_WRITEABLE:
@@ -811,7 +812,7 @@ int socket_connect()
     wsi = NULL;
 
     act.sa_handler = INT_HANDLER;
-    act.sa_flags   = 0;
+    act.sa_flags = 0;
     sigemptyset(&act.sa_mask);
     sigaction(SIGINT, &act, 0);
 
