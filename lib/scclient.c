@@ -95,6 +95,8 @@ struct socket
     char * path;
     char *proxy_address;
     int proxy_port;
+    char *ping_str;
+    char *pong_str;
     int (* connect)();
     void (* disconnect)();
 
@@ -197,6 +199,9 @@ struct socket * Socket(char *protocol,char *address,int port,char *path,char *pr
     s->connect_error_callback=NULL;
     s->onauth_callback=NULL;
     s->onauthtoken_callback=NULL;
+
+    s->ping_str = (char *)"";
+    s->pong_str = (char *)"";
 
     acks=hashmap_new();
     singlecallbacks=_hashmap_new();
@@ -305,8 +310,8 @@ static int ws_service_callback(
 
         case LWS_CALLBACK_CLIENT_RECEIVE:{
             //printf("in: %s\n", (char *)in);
-            if (strcmp((char *)in,"")==0){
-                websocket_write_back(wsi, (char *) "", -1);
+            if (strcmp((char *)in,s->ping_str)==0){
+                websocket_write_back(wsi, (char *) s->pong_str, -1);
             }
             else if (strcmp((char *)in,"#1")==0) {
                 websocket_write_back(wsi, (char *) "#2", -1);
