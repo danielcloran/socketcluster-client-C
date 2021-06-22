@@ -282,7 +282,7 @@ static int ws_service_callback(
         }
 
         char *data = (char *)json_object_to_json_string(jobj);
-        std::cout << "The json object created: " << json_object_to_json_string(jobj) << std::endl;
+        // std::cout << "The json object created: " << json_object_to_json_string(jobj) << std::endl;
         // "{\"event\": \"#handshake\",\"data\": {\"authToken\":null},\"cid\":1}"
         websocket_write_back(wsi, data, -1);
         if (s->connect_callback != NULL)
@@ -327,7 +327,7 @@ static int ws_service_callback(
         }
         else
         {
-            std::cout << KCYN_L << "[Main Service] Client received: " << (char *)in << RESET << std::endl;
+            //std::cout << KCYN_L << "[Main Service] Client received: " << (char *)in << RESET << std::endl;
             // printf("UNDER MESSAGE GOT CALLED");
             char *channel;
             json_object *data;
