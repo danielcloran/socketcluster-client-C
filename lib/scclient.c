@@ -327,7 +327,7 @@ static int ws_service_callback(
         }
         else
         {
-            // std::cout << KCYN_L << "[Main Service] Client received: " << (char *)in << RESET << std::endl;
+            std::cout << KCYN_L << "[Main Service] Client received: " << (char *)in << RESET << std::endl;
             // printf("UNDER MESSAGE GOT CALLED");
             char *channel;
             json_object *data;
