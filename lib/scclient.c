@@ -62,6 +62,7 @@ int use_ssl = 0;
 // register the signal SIGINT handler
 static void INT_HANDLER(int signo)
 {
+    printf("Destroy flag called");
     destroy_flag = 1;
 }
 
