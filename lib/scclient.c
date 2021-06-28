@@ -601,6 +601,7 @@ void _unsubscribe(char *channelname)
     json_object_object_add(jobj, "cid", cnt);
     // websocket_write_back(wsi, (char *)json_object_to_json_string(jobj), -1);
     pthread_t pid;
+
     pthread_create(&pid, NULL, pthread_routine, (char *)json_object_to_json_string(jobj));
     pthread_detach(pid);
     free(jobj);
@@ -881,15 +882,16 @@ int socket_connect()
     // pthread_detach(pid);
 
     // attempt auto reconnect
-    while(true)
-    {
+    // while(true)
+    // {
         while (!destroy_flag)
         {
             lws_service(context, 50);
         }
+        printf("Got the destroy flag");
 
         lws_context_destroy(context);
-    }
+    // }
 
     return 0;
 }
