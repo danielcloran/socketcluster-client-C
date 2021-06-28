@@ -880,12 +880,16 @@ int socket_connect()
     // pthread_create(&pid, NULL, pthread_routine, (char *)"hello");
     // pthread_detach(pid);
 
-    while (!destroy_flag)
+    // attempt auto reconnect
+    while(true)
     {
-        lws_service(context, 50);
-    }
+        while (!destroy_flag)
+        {
+            lws_service(context, 50);
+        }
 
-    lws_context_destroy(context);
+        lws_context_destroy(context);
+    }
 
     return 0;
 }
