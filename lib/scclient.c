@@ -47,14 +47,6 @@ map_t singlecallbacks;
 map_t singleackcallbacks;
 map_t publishcallbacks;
 
-//Setting everything for connect method
-struct lws_context *context;
-struct lws_context_creation_info info;
-struct lws *wsi;
-struct lws_client_connect_info i;
-struct lws_protocols protocol;
-struct sigaction act;
-
 int ietf_version = -1;
 
 int use_ssl = 0;
@@ -803,33 +795,39 @@ void _Ack(struct ackdata *ack, json_object *error, json_object *data)
 
 void socket_disconnect()
 {
-    pthread_exit(NULL);
+    /* pthread_exit(NULL);
     lws_context_destroy(context);
-    free(s);
+    free(s); */
 }
 
 int socket_connect()
 {
-    context = NULL;
-    wsi = NULL;
 
+    //* register the signal SIGINT handler */
+    struct sigaction act;
     act.sa_handler = INT_HANDLER;
     act.sa_flags = 0;
     sigemptyset(&act.sa_mask);
     sigaction(SIGINT, &act, 0);
 
-    memset(&info, 0, sizeof info);
 
+    struct lws_context *context = NULL;
+    struct lws_context_creation_info info;
+    struct lws *wsi = NULL;
+    struct lws_protocols protocol;
+
+    memset(&info, 0, sizeof info);
     info.port = CONTEXT_PORT_NO_LISTEN;
     info.iface = NULL;
     info.protocols = &protocol;
     info.http_proxy_address = s->proxy_address;
     info.http_proxy_port = (unsigned int)s->proxy_port;
-    // info.extensions = lws_get_internal_extensions();
-    info.extensions = NULL;
+    info.ssl_cert_filepath = NULL;
+    info.ssl_private_key_filepath = NULL;
+    info.extensions = NULL; // lws_get_internal_extensions();
     info.gid = -1;
     info.uid = -1;
-    info.options = LWS_SERVER_OPTION_DO_SSL_GLOBAL_INIT;
+    info.options = 0; // LWS_SERVER_OPTION_DO_SSL_GLOBAL_INIT;
 
     protocol.name = "websocket";
     protocol.callback = &ws_service_callback;
@@ -838,10 +836,18 @@ int socket_connect()
     protocol.id = 0;
     protocol.user = NULL;
 
+
     context = lws_create_context(&info);
+    printf(KRED"[Main] context created.\n"RESET);
+
+    if (context == NULL) {
+        printf(KRED"[Main] context is NULL.\n"RESET);
+        return -1;
+    }
+
+    struct lws_client_connect_info i;
 
     memset(&i, 0, sizeof(i));
-
     i.port = s->port;
     i.path = s->path;
     i.address = s->address;
@@ -853,43 +859,22 @@ int socket_connect()
     i.ietf_version_or_minus_one = ietf_version;
     i.client_exts = exts;
 
-    std::cout << KRED << "[Main] context created." << RESET << std::endl;
-
-    if (context == NULL)
-    {
-        std::cout << KRED << "[Main] context is NULL." << RESET << std::endl;
-        return 0;
-    }
-
-    // wsi = lws_client_connect(context, "localhost", 8000, 0,
-    // "/socketcluster/", "localhost:8000", NULL,
-    // protocol.name, -1);
     wsi = lws_client_connect_via_info(&i);
 
-    if (wsi == NULL)
-    {
-        std::cout << KRED << "[Main] wsi create error." << RESET << std::endl;
-        return 0;
+    if (wsi == NULL) {
+        printf(KRED"[Main] wsi create error.\n"RESET);
+        return -1;
     }
 
-    std::cout << KGRN << "[Main] wsi create success." << RESET << std::endl;
+    printf(KGRN"[Main] wsi create success.\n"RESET);
 
-    // struct pthread_routine_tool tool;
-    // tool.wsi = wsi;
-    // tool.context = context;
-
-    // pthread_t pid;
-    // pthread_create(&pid, NULL, pthread_routine, (char *)"hello");
-    // pthread_detach(pid);
-
-    // attempt auto reconnect
     while (!destroy_flag)
     {
         lws_service(context, 50);
     }
-    printf("Got the destroy flag");
 
     lws_context_destroy(context);
+    destroy_flag = 0;
 
     return 0;
 }
