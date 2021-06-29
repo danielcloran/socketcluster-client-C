@@ -910,7 +910,6 @@ int socket_connect()
     {
         lws_service(context, 50);
     }
-    pthread_exit(NULL);
     printf("Post exit threads \n");
     lws_context_destroy(context);
     destroy_flag = 0;
