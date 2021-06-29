@@ -30,14 +30,14 @@ struct lws *wsi = NULL;
 
 int counter = 0;
 
-static const struct lws_extension exts[] = {
-    {"permessage-deflate",
+static const struct lws_extension exts[] = {};
+    /*{"permessage-deflate",
      lws_extension_callback_pm_deflate,
      "permessage-deflate; client_max_window_bits"},
     {"deflate-frame",
      lws_extension_callback_pm_deflate,
      "deflate_frame"},
-    {NULL, NULL, NULL /* terminator */}};
+    {NULL, NULL, NULL /* terminator */}};*/
 
 //Setting flags
 static int destroy_flag = 0;
