@@ -892,6 +892,8 @@ int socket_connect()
         printf("Got the destroy flag");
 
         lws_context_destroy(context);
+
+        destroy_flag = 0;
     }
 
     return 0;
