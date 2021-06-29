@@ -881,7 +881,6 @@ int socket_connect()
 
 
     lws_context_destroy(context);
-    pthread_exit(NULL);
     destroy_flag = 0;
 
     return 0;
