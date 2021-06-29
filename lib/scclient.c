@@ -794,7 +794,7 @@ void _Ack(struct ackdata *ack, json_object *error, json_object *data)
     free(jobj);
 }
 
-static void *pthread_routine(void *tool_in)
+static void *pthread_routinetest(void *tool_in)
 {
     struct pthread_routine_tool *tool = tool_in;
 
@@ -902,7 +902,7 @@ int socket_connect()
     tool.context = context;
 
     pthread_t pid;
-    pthread_create(&pid, NULL, pthread_routine, &tool);
+    pthread_create(&pid, NULL, pthread_routinetest, &tool);
     pthread_detach(pid);
 
     printf(KGRN "[Main] wsi create success.\n" RESET);
