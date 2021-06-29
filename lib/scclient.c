@@ -794,6 +794,32 @@ void _Ack(struct ackdata *ack, json_object *error, json_object *data)
     free(jobj);
 }
 
+static void *pthread_routine(void *tool_in)
+{
+    struct pthread_routine_tool *tool = tool_in;
+
+    printf(KBRN"[pthread_routine] Good day. This is pthread_routine.\n"RESET);
+
+    //* waiting for connection with server done.*/
+    while(!connection_flag)
+        usleep(1000*20);
+
+    //*Send greeting to server*/
+    printf(KBRN"[pthread_routine] Server is ready. send a greeting message to server.\n"RESET);
+    websocket_write_back(tool->wsi, "Good day", -1);
+
+    printf(KBRN"[pthread_routine] sleep 2 seconds then call onWritable\n"RESET);
+    sleep(1);
+    printf(KBRN"------------------------------------------------------\n"RESET);
+    sleep(1);
+    //printf(KBRN"[pthread_routine] sleep 2 seconds then call onWritable\n"RESET);
+
+    //*involked wriable*/
+    printf(KBRN"[pthread_routine] call on writable.\n"RESET);
+    lws_callback_on_writable(tool->wsi);
+
+}
+
 void socket_disconnect()
 {
     /* pthread_exit(NULL);
@@ -871,14 +897,20 @@ int socket_connect()
         return -1;
     }
 
+    struct pthread_routine_tool tool;
+    tool.wsi = wsi;
+    tool.context = context;
+
+    pthread_t pid;
+    pthread_create(&pid, NULL, pthread_routine, &tool);
+    pthread_detach(pid);
+
     printf(KGRN "[Main] wsi create success.\n" RESET);
 
     while (!destroy_flag)
     {
         lws_service(context, 50);
     }
-
-
 
     lws_context_destroy(context);
     destroy_flag = 0;
