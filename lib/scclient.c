@@ -26,6 +26,7 @@
 typedef void (*callback)(struct ackdata *, json_object *, json_object *);
 
 //Defining structure for extra_extensions
+struct lws *wsi = NULL;
 
 int counter = 0;
 
@@ -813,7 +814,6 @@ int socket_connect()
 
     struct lws_context *context = NULL;
     struct lws_context_creation_info info;
-    struct lws *wsi = NULL;
     struct lws_protocols protocol;
 
     memset(&info, 0, sizeof info);
@@ -838,10 +838,10 @@ int socket_connect()
 
 
     context = lws_create_context(&info);
-    printf(KRED"[Main] context created.\n"RESET);
+    printf(KRED "[Main] context created.\n" RESET);
 
     if (context == NULL) {
-        printf(KRED"[Main] context is NULL.\n"RESET);
+        printf(KRED "[Main] context is NULL.\n" RESET);
         return -1;
     }
 
@@ -862,11 +862,11 @@ int socket_connect()
     wsi = lws_client_connect_via_info(&i);
 
     if (wsi == NULL) {
-        printf(KRED"[Main] wsi create error.\n"RESET);
+        printf(KRED "[Main] wsi create error.\n" RESET);
         return -1;
     }
 
-    printf(KGRN"[Main] wsi create success.\n"RESET);
+    printf(KGRN "[Main] wsi create success.\n" RESET);
 
     while (!destroy_flag)
     {
