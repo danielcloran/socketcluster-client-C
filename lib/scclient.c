@@ -883,8 +883,8 @@ int socket_connect()
     // pthread_detach(pid);
 
     // attempt auto reconnect
-    // while(true)
-    // {
+    while(true)
+    {
         while (!destroy_flag)
         {
             lws_service(context, 50);
@@ -892,7 +892,7 @@ int socket_connect()
         printf("Got the destroy flag");
 
         lws_context_destroy(context);
-    // }
+    }
 
     return 0;
 }
