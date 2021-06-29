@@ -55,7 +55,7 @@ int use_ssl = 0;
 // register the signal SIGINT handler
 static void INT_HANDLER(int signo)
 {
-    printf("Destroy flag called");
+    printf("Destroy flag called\n");
     destroy_flag = 1;
 }
 
@@ -876,7 +876,10 @@ int socket_connect()
         lws_service(context, 50);
     }
 
+
+
     lws_context_destroy(context);
+    pthread_exit(NULL);
     destroy_flag = 0;
 
     return 0;
