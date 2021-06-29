@@ -798,24 +798,24 @@ static void *pthread_routine(void *tool_in)
 {
     struct pthread_routine_tool *tool = tool_in;
 
-    printf(KBRN"[pthread_routine] Good day. This is pthread_routine.\n"RESET);
+    printf(KBRN "[pthread_routine] Good day. This is pthread_routine.\n" RESET);
 
     //* waiting for connection with server done.*/
     while(!connection_flag)
         usleep(1000*20);
 
     //*Send greeting to server*/
-    printf(KBRN"[pthread_routine] Server is ready. send a greeting message to server.\n"RESET);
+    printf(KBRN "[pthread_routine] Server is ready. send a greeting message to server.\n" RESET);
     websocket_write_back(tool->wsi, "Good day", -1);
 
-    printf(KBRN"[pthread_routine] sleep 2 seconds then call onWritable\n"RESET);
+    printf(KBRN "[pthread_routine] sleep 2 seconds then call onWritable\n" RESET);
     sleep(1);
-    printf(KBRN"------------------------------------------------------\n"RESET);
+    printf(KBRN "------------------------------------------------------\n" RESET);
     sleep(1);
     //printf(KBRN"[pthread_routine] sleep 2 seconds then call onWritable\n"RESET);
 
     //*involked wriable*/
-    printf(KBRN"[pthread_routine] call on writable.\n"RESET);
+    printf(KBRN "[pthread_routine] call on writable.\n" RESET);
     lws_callback_on_writable(tool->wsi);
 
 }
