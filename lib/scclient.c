@@ -794,8 +794,10 @@ void _Ack(struct ackdata *ack, json_object *error, json_object *data)
     free(jobj);
 }
 
-static void *pthread_routinetest(struct pthread_routine_tool *tool_in)
+static void *pthread_routinetest(void *tool_in)
 {
+    struct pthread_routine_tool *tool = static_cast<pthread_routine_tool *> (tool_in);
+
     printf(KBRN "[pthread_routine] Good day. This is pthread_routine.\n" RESET);
 
     //* waiting for connection with server done.*/
