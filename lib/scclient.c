@@ -794,19 +794,17 @@ void _Ack(struct ackdata *ack, json_object *error, json_object *data)
     free(jobj);
 }
 
-static void *pthread_routinetest(void *tool_in)
+static void *pthread_routinetest(struct pthread_routine_tool *tool_in)
 {
-    struct pthread_routine_tool *tool = tool_in;
-
     printf(KBRN "[pthread_routine] Good day. This is pthread_routine.\n" RESET);
 
     //* waiting for connection with server done.*/
-    while(!connection_flag)
-        usleep(1000*20);
+    while (!connection_flag)
+        usleep(1000 * 20);
 
     //*Send greeting to server*/
     printf(KBRN "[pthread_routine] Server is ready. send a greeting message to server.\n" RESET);
-    websocket_write_back(tool->wsi, "Good day", -1);
+    websocket_write_back(tool->wsi, (char *)"Good day", -1);
 
     printf(KBRN "[pthread_routine] sleep 2 seconds then call onWritable\n" RESET);
     sleep(1);
@@ -817,7 +815,6 @@ static void *pthread_routinetest(void *tool_in)
     //*involked wriable*/
     printf(KBRN "[pthread_routine] call on writable.\n" RESET);
     lws_callback_on_writable(tool->wsi);
-
 }
 
 void socket_disconnect()
@@ -837,7 +834,6 @@ int socket_connect()
     act.sa_flags = 0;
     sigemptyset(&act.sa_mask);
     sigaction(SIGINT, &act, 0);
-
 
     struct lws_context *context = NULL;
     struct lws_context_creation_info info;
@@ -863,11 +859,11 @@ int socket_connect()
     protocol.id = 0;
     protocol.user = NULL;
 
-
     context = lws_create_context(&info);
     printf(KRED "[Main] context created.\n" RESET);
 
-    if (context == NULL) {
+    if (context == NULL)
+    {
         printf(KRED "[Main] context is NULL.\n" RESET);
         return -1;
     }
@@ -891,8 +887,8 @@ int socket_connect()
     wsi = lws_client_connect_via_info(&i);
     printf(KRED "Post connect.\n" RESET);
 
-
-    if (wsi == NULL) {
+    if (wsi == NULL)
+    {
         printf(KRED "[Main] wsi create error.\n" RESET);
         return -1;
     }
