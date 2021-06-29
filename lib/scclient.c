@@ -863,6 +863,8 @@ int socket_connect()
     printf(KRED "About to call connect.\n" RESET);
 
     wsi = lws_client_connect_via_info(&i);
+    printf(KRED "Post connect.\n" RESET);
+
 
     if (wsi == NULL) {
         printf(KRED "[Main] wsi create error.\n" RESET);
