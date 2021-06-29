@@ -803,6 +803,7 @@ void socket_disconnect()
 
 int socket_connect()
 {
+    printf(KRED "Attempting connect.\n" RESET);
 
     //* register the signal SIGINT handler */
     struct sigaction act;
@@ -858,6 +859,8 @@ int socket_connect()
     i.protocol = "websocket";
     i.ietf_version_or_minus_one = ietf_version;
     i.client_exts = exts;
+
+    printf(KRED "About to call connect.\n" RESET);
 
     wsi = lws_client_connect_via_info(&i);
 
